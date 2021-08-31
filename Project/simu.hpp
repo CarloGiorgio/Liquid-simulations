@@ -74,7 +74,7 @@ class MySet{
         e=0.;
         rc=r_c;
         u_shift=LJ(rc);
-        if(rc<0){
+        if(rc<0||N<2){
             u_tail=0.;
             p_tail=0.;
         }else{

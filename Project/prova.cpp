@@ -119,7 +119,7 @@ int main(int argc,char* argv[]){
     f>>s;
     int _n=atoi(s);
     LJ.set_value_muTV(T,z,t_tot,delta,_n);
-    _n=0;
+    _n=1;
     t_tot=rint(0.3*LJ.V);
     string _s;
     #if BRUTE
