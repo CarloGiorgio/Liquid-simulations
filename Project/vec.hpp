@@ -64,9 +64,23 @@ class MyVec{
             r[i]=xsi(mt);
         }
     };
+
     void set_random(double l){
         for(int i=0;i<3;i++){
             r[i]=l*xsi(mt);
+        }
+    };
+
+    //random vector in uniform volume 
+    void set_random_2(){
+        for(int i=0;i<3;i++){
+            r[i]=(xsi(mt)-0.5);
+        }
+    };
+
+    void set_random_2(double l){
+        for(int i=0;i<3;i++){
+            r[i]=(xsi(mt)-0.5)*l;
         }
     };
 
@@ -111,7 +125,7 @@ class MyVec{
         double R=0.;
         double _r=0;
         for(int i=0;i<3;i++){
-            _r=r[i]-l*rint(r[i]/l);
+            _r=r[i]-l*nearbyint(r[i]/l);
             R+=_r*_r;
         }
         return sqrt(R);
@@ -201,7 +215,7 @@ class MyVec{
         double d;
         for(int i=0;i<3;i++){
             d=r[i]-v.r[i];
-            vr.r[i]=d-rint(d/l)*l;
+            vr.r[i]=d-nearbyint(d/l)*l;
         }
         d=vr.norm();
         return d;
@@ -212,5 +226,12 @@ class MyVec{
             cout<<r[i]<<' ';
         }
         cout<<endl;
+    };
+
+    void print_vec(ostream&f){
+          for(int i=0;i<3;i++){
+            f<<r[i]<<' ';
+        }
+        f<<endl;
     };
 };
