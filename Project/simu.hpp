@@ -1166,4 +1166,102 @@ class muTV:public NTP{
         }
         f.close();
     };  
+
+    void mc_step_number_SUS_brute(int _N){
+        double _d;
+        if(xsi(mt)<0.5){
+            if(N==0||(N-1)!=_N){ 
+                return;
+            }
+            int _n;
+            _n=rint(xsi(mt)*N);
+            if(rc<0||N==1){
+                _d=N/z/V;
+            }else{
+                _d=N/z/V*exp(-beta*energy_brute_one(pos[_n],_n));
+            }
+
+            if(_d<0||xsi(mt)<_d){
+                pos[_n].copy(pos[N-1]);
+                pos.pop_back();
+                N-=1;
+            }
+
+        }else{
+            if(N+1!=_N){
+                return;
+            }
+            MyVec _P;
+
+            if(rc>0&&N>0){
+                do{
+                    _P.set_random(L);
+                } while(check_overlap(_P));
+            }else{
+                _P.set_random(L);
+            }
+            //_P.print_vec();
+            if(rc>0&&N>0){
+                _d=z*V/(N+1)*exp(-beta*energy_brute_one(_P,-1));
+            }else{
+                _d=z*V/(N+1);
+            }
+            if(_d<0||xsi(mt)<_d){
+                pos.push_back(_P);
+                N+=1;
+            }
+        }
+        rho=N/V;
+
+        if(rc>0&&N>1){
+            tail();
+        }
+    };
+    void mc_step_muTV_SUS_brute(fstrema &_f,int_N){
+        void mc_step_muTV_brute(){
+        if(n_try<0){
+            if(xsi(mt)<1./3.){
+                mc_step_brute();
+            }else{
+                mc_step_number_SUS_brute(_N);
+                _f<<N<<endl;
+            }
+        }else{
+            if(xsi(mt)*(N+_N)<N){
+                mc_step_brute();
+            }else{
+                mc_step_number_SUS_brute(_N);
+                _f<<N<<endl;
+            }
+        }
+    };
+    void simu_brute_muTV_SUS(string s,int time_start, int time_take,\
+    string s1,int _N){
+    fstream f;
+    fstream _f;
+    double em=0.,em2=0.,rhom=0.,rhom2=0.;
+    
+    f.open(s,ios::out | ios::trunc);
+    _f.open(s1,ios::out | ios::trunc);
+    print_para_muTV(f);
+    f<<"# 1: Time 2: pressure 3:<p> 4:<p^2>-<p>^2"<< \
+    " 5:density 6:<d> 7:<d^2>-<d>^2"<<endl;
+    }
+    print_para_muTV(_f);
+    _f<<"# Successive umbrella sampling with\n# N="<<_N<<end;
+    int k=0;
+    vector<double> c;
+    c.resize(1);
+    for(int i=1;i<time+1;i++){
+        mc_step_muTV_SUS_brute(_f,s);
+        if(i>time_start){
+            c[0]=N;
+            energy_pressure_brute();
+            mean_print_file(f,i,time_take,time_start,&k,p,rho,\
+            &em,&em2,&rhom,&rhom2,c);
+            //cout<<e<<" "<<p<<endl;
+        }
+    }
+    f.close();
+    _f.close();
 };

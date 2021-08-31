@@ -17,6 +17,12 @@ void error_muTV(char*s){
     cerr<<"Error"<<endl<<"Usage:"<<s<<" rho T zeta filename"<<endl;
     exit(EXIT_FAILURE);
 }
+
+void error_muTV_SUS(char*s){
+    cerr<<"Error"<<endl<<"Usage:"<<s<<" rho T zeta data_filename\
+    hist_head_filename"<<endl;
+    exit(EXIT_FAILURE);
+}
 void assign(fstream &f){
     char s[100];
     f>>s;
@@ -88,7 +94,7 @@ int main(int argc,char* argv[]){
     LJ.simu_LL_NTP(argv[4],t_start,t_freq);
     #endif
 
-    #else    
+    #elif ense==2
     if(argc<5){
         error_muTV(argv[0]);
     }   
@@ -104,6 +110,35 @@ int main(int argc,char* argv[]){
     fprintf(stderr,"Simulation muTV using LL algorithm\n");
     LJ.simu_LL_muTV(argv[4],t_start,t_freq);
     #endif    
+    #else
+    if(argc<6){
+        error_muTV_SUS(argv[0]);
+    }   
+    double z=atof(argv[3]);
+    char s[100];
+    f>>s;
+    int _n=atoi(s);
+    LJ.set_value_muTV(T,z,t_tot,delta,_n);
+    _n=0;
+    t_tot=rint(0.3*LJ.V);
+    string _s;
+    #if BRUTE
+    fprintf(stderr,"Simulation muTV using brute algorithm\n\
+    Successive Umbrella Sampling");
+    while(_n<t_tot){
+        _s=argv[5]+"_"+_n+".txt";
+        LJ.set_value(_n/LJ.V,_n);
+        LJ.simu_brute_muTV_SUS(argv[4],t_start,t_freq,_s,_n);
+        _n+=1;
+    }
+    #else
+    fprintf(stderr,"Simulation muTV using LL algorithm\n\
+    Successive Umbrella Sampling");
+    while(_n<t_tot){
+        _s=argv[5]+"_"+_n+".txt";
+        LJ.simu_LL_muTV_SUS(argv[4],t_start,t_freq,_s,_n);
+        _n+=1;
+    }
     #endif
 
     return 0;
