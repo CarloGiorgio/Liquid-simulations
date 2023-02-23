@@ -44,7 +44,7 @@ class MyVec{
 
     //empty vector
     MyVec(){
-        r=new double[3];
+        r = new double[3];
         for(int i=0;i<3;i++){
             r[i]=0.;
         }
@@ -52,7 +52,7 @@ class MyVec{
 
     //isotropic vector with strength l
     MyVec(double l){
-        r=new double[3];
+        r = new double[3];
         for(int i=0;i<3;i++){
             r[i]=1.*l;
         }
@@ -60,7 +60,7 @@ class MyVec{
 
     //spcified vector
     MyVec(double x,double y,double z){
-        r=new double[3];
+        r = new double[3];
         r[0]=x;
         r[1]=y;
         r[2]=z;
@@ -68,14 +68,14 @@ class MyVec{
 
     //initialize vector with precise coordinates
     void set_initial(double x,double y,double z){
-        r[0]=x;
-        r[1]=y;
-        r[2]=z;
+        r[0] = x;
+        r[1] = y;
+        r[2] = z;
     };
 
     void set_unit(){
         for(int i=0;i<3;i++){
-            r[i]=1.;
+            r[i] = 1.;
         }
     }
 
@@ -83,20 +83,20 @@ class MyVec{
     //defined in the programe according to the generator
     void set_random(){
         for(int i=0;i<3;i++){
-            r[i]=xsi(mt);
+            r[i] = xsi(mt);
         }
     };
 
     void set_random(double l){
         for(int i=0;i<3;i++){
-            r[i]=l*xsi(mt);
+            r[i] = l*xsi(mt);
         }
     };
 
-    //random vector in uniform volume 
+    //random vector in uniform volume between -l/2 and l/2
     void set_random_2(){
         for(int i=0;i<3;i++){
-            r[i]=(xsi(mt)-0.5);
+            r[i] = (xsi(mt)-0.5);
         }
     };
 
@@ -125,20 +125,20 @@ class MyVec{
     // Periodicaly Boundary conditions
     void set_PB(double l){
         for (int i=0;i<3;i++){
-            r[i]-=rint(r[i]/l)*l;
+            r[i] -= rint(r[i]/l)*l;
         }    
     }
     //copy a vector
     void copy(MyVec&v){
         for(int i=0;i<3;i++){
-            r[i]=v.r[i];
+            r[i] = v.r[i];
         }
     }
     //norm of the vector
     double norm(){
-        double R=0.;
+        double R = 0.;
         for(int i=0;i<3;i++){
-            R+=r[i]*r[i];
+            R += r[i]*r[i];
         }
         return sqrt(R);
     };
@@ -147,8 +147,8 @@ class MyVec{
         double R=0.;
         double _r=0;
         for(int i=0;i<3;i++){
-            _r=r[i]-l*rint(r[i]/l);
-            R+=_r*_r;
+            _r = r[i]-l*rint(r[i]/l);
+            R += _r*_r;
         }
         return sqrt(R);
     };
@@ -156,7 +156,7 @@ class MyVec{
     MyVec operator+(MyVec&v){
         MyVec vr;
         for(int i=0;i<3;i++){
-            vr.r[i]=r[i]+v.r[i];
+            vr.r[i] = r[i] + v.r[i];
         }
         return vr;
     };
@@ -165,7 +165,7 @@ class MyVec{
     MyVec operator-(MyVec&v){
         MyVec vr;
         for(int i=0;i<3;i++){
-            vr.r[i]=r[i]-v.r[i];
+            vr.r[i] = r[i] - v.r[i];
         }
         return vr;
     };
@@ -173,16 +173,16 @@ class MyVec{
     MyVec operator-(){
         MyVec vr;
         for(int i=0;i<3;i++){
-            vr.r[i]=r[i]*(-1.);
+            vr.r[i] = r[i]*(-1.);
         }
         return vr;
     };
     
-    //scalar addition 
+    //addition by a scalar
     MyVec operator &&(double l){
         MyVec vr(l);
         for(int i =0;i<3;i++){
-            vr.r[i]+=r[i];
+            vr.r[i] += r[i];
         }
         return vr;
     };
@@ -191,12 +191,20 @@ class MyVec{
     MyVec operator *(double l){
         MyVec vr;
         for(int i =0;i<3;i++){
-            vr.r[i]=l*r[i];
+            vr.r[i] = l*r[i];
         }
         return vr;
     };
 
-    //dot product 
+    MyVec operator /(double l){
+        MyVec vr;
+        for(int i =0;i<3;i++){
+            vr.r[i] = r[i]/l;
+        }
+        return vr;
+    };
+
+    //scalar product 
     double operator &(MyVec &v){
         double d=0.;
         for(int i=0;i<3;i++){
@@ -205,8 +213,9 @@ class MyVec{
         return d;
     };
 
-    //external product
+    
     MyVec operator ^(MyVec &v){
+        //external product
         MyVec vr;
         for(int i=0;i<3;i++){
             vr.r[i]=r[(i+1)%3]*v.r[(i+2)%3]-(r[(i+2)%3]*v.r[(i+1)%3]);
@@ -214,12 +223,13 @@ class MyVec{
         return vr;
     };
     
-    //distance between vector
+    
     double dist(MyVec & v){
+        //distance between vector
         MyVec vr;
         double d;
-        vr=(*this)-v;
-        d=vr.norm();
+        vr = (*this) - v;
+        d = vr.norm();
         return d;
     }
 
@@ -238,12 +248,23 @@ class MyVec{
         MyVec vr;
         double d;
         for(int i=0;i<3;i++){
-            d=r[i]-v.r[i];
-            vr.r[i]=d-rint(d/l)*l;
+            d= r[i] - v.r[i];
+            vr.r[i] = d - rint(d/l)*l;
         }
-        d=vr.norm();
+        d = vr.norm();
         return d;
     }
+
+    MyVec project(MyVec &v){
+        //perform the projection of a vector on r
+        MyVec vr;
+        double d;
+        d = (*this)&v;
+        for(int i = 0;i<3; i++){
+            vr.r[i] = r[i] * d;
+        }
+        return vr;
+    };
 
     //print vector on stdout
     void print_vec(){
